@@ -1,0 +1,17 @@
+div.container {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    margin:0px; 
+    padding:0px; 
+    height: 100%;
+    width: 100%;
+    min-width: 1000px;
+    border: none;
+}
+
+.iframe {
+    border: none;
+    height:99%;
+    width:100%;
+}

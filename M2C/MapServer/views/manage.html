@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>管道设备管理</title>
+    <script src="/javascripts/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script src="/javascripts/bootstrap.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css" />
+    <style>
+    </style>
+    <script type="text/javascript">
+    function saveFactory(id, method, factory, name, lat, long){
+        $.ajax({url: 'http://' + window.location.host + '/json',
+            data: { func: "saveNode", 
+                    type: method, 
+                    data: {id: id, factory: factory, name: name, lat:lat, long:long}},
+            dataType: "json",
+            success: function(jsonData) {
+                if (!jsonData.flag){
+                    alert("保存失败");
+                }
+                location.reload();
+            }
+        });
+    }
+    function getFactory(){
+        $.ajax({url: 'http://' + window.location.host + '/json',
+            data: { func: "getNodeList"},
+            dataType: "json",
+            success: function(jsonData) {
+                if (!jsonData.flag)
+                    return;
+                var result = "";
+                for (var i = 0; i < jsonData.result.length; i++){
+                    result += "<tr>";
+                        result += "<td>" + jsonData.result[i].id + "</td>";
+                        result += "<td><input id='factory' value='" + jsonData.result[i].factory + "'></td>";
+                        result += "<td><input id='name' value='" + jsonData.result[i].name + "'></td>";
+                        result += "<td><input id='latitude' value='" + jsonData.result[i].latitude + "'></td>";
+                        result += "<td><input id='longitude' value='" + jsonData.result[i].longitude + "'></td>";
+                        result += "<td><button class='btn btn-success' id='save'>保存</button>"
+                        result += "<button class='btn btn-danger' id='delete'>删除</button></td>"
+                    result += "</tr>";
+                }
+                result += "<tr><td></td>"
+                    result += "<td><input id='factory'></td><td><input id='name'></td>";
+                    result += "<td><input id='latitude'></td><td><input id='longitude'></td>";
+                    result += "<td><button class='btn btn-success' id='saveNew'>保存</button></td>";
+                    result += "</tr>";
+                $("#myTable").html(result);
+                $('button').on('click', function (e) {
+                    var id = e.target.parentElement.parentElement.childNodes[0].innerHTML;
+                    var factory = $(e.target.parentElement.parentElement.childNodes[1].childNodes[0]).val();
+                    var name = $(e.target.parentElement.parentElement.childNodes[2].childNodes[0]).val();
+                    var lat = $(e.target.parentElement.parentElement.childNodes[3].childNodes[0]).val();
+                    var long = $(e.target.parentElement.parentElement.childNodes[4].childNodes[0]).val();
+                    var method = e.target.id;
+                    saveFactory(id, method, factory, name, lat, long);
+                })
+            }
+        });
+    }
+    $(document).ready(function(){
+        getFactory();
+    });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+        <div class="return">
+            <a href="/" class="btn btn-success">返回</a>
+        </div>
+        <div class="well">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>factory</th>
+                        <th>name</th>
+                        <th>latitude</th>
+                        <th>longitude</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </body>
+</html>
